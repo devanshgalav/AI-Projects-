@@ -1,14 +1,13 @@
 from __future__ import annotations
+
 from dotenv import load_dotenv
 
 load_dotenv()
-
 import base64
 import mimetypes
 import os
 from pathlib import Path
 from typing import Any, cast
-
 import gradio as gr
 from openai import OpenAI
 
@@ -20,7 +19,7 @@ MODEL_CHOICES = [
     "google/gemini-2.0-flash-001",
     "anthropic/claude-3.5-haiku",
 ]
-APP_TITLE = "Day 3 Vision Chat"
+APP_TITLE = "Vision Chat"
 
 
 def clean_model_text(text: str) -> str:
