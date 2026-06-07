@@ -1,10 +1,13 @@
 from __future__ import annotations
+from dotenv import load_dotenv
+
+load_dotenv()
 
 import base64
 import mimetypes
 import os
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 import gradio as gr
 from openai import OpenAI
@@ -117,7 +120,7 @@ def stream_chat_response(
             api_key=api_key,
             default_headers={
                 "HTTP-Referer": "http://localhost:7860",
-                "X-Title": APP_TITLE,
+                "X-Title": APP_TITLE
             },
         )
         response = client.chat.completions.create(
