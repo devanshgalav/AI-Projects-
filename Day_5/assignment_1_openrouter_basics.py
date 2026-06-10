@@ -11,9 +11,16 @@ DEFAULT_MODEL = "openai/gpt-4o-mini"
 def resolve_api_key(api_key: str | None = None) -> str:
     """Return an API key from the function argument or environment."""
     # TODO 1: return the stripped api_key if provided.
+    if api_key and api_key.strip():
+        return api_key.strip()
+    
     # TODO 2: otherwise read OPENROUTER_API_KEY from the environment.
+    env_key = os.environ.get("OPENROUTER_API_KEY")
+    if env_key and env_key.strip():
+        return env_key.strip()
+    
     # TODO 3: raise ValueError if neither exists.
-    raise NotImplementedError
+    raise ValueError("OpenRouter API key not found in arguments or environment.")
 
 
 def create_openrouter_client(api_key: str) -> Any:
@@ -21,7 +28,10 @@ def create_openrouter_client(api_key: str) -> Any:
     from openai import OpenAI
 
     # TODO 4: return an openai client using openrouter's base url
-    raise NotImplementedError
+    return OpenAI(
+        base_url=OPENROUTER_BASE_URL,
+        api_key=api_key,
+    )
 
 
 def build_text_messages(
@@ -36,9 +46,10 @@ def build_text_messages(
         content = item.get("content")
         if role in {"user", "assistant"} and isinstance(content, str) and content.strip():
             # TODO 5: append the previous message as {"role": role, "content": content.strip()}
-            pass
+            messages.append({"role": role, "content": content.strip()})
 
     # TODO 6: append the latest user prompt.
+    messages.append({"role": "user", "content": user_prompt.strip()})
     return messages
 
 
@@ -55,9 +66,14 @@ def ask_text_model(
     # model=model
     # messages=build_text_messages(prompt, history)
     # extra_body={"provider": {"data_collection": "deny"}}
+    response = client.chat.completions.create(
+        model=model,
+        messages=build_text_messages(prompt, history),
+        extra_body={"provider": {"data_collection": "deny"}}
+    )
 
     # TODO 8: return response.choices[0].message.content or an empty string.
-    raise NotImplementedError
+    return response.choices[0].message.content or ""
 
 
 if __name__ == "__main__":

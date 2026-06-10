@@ -43,7 +43,6 @@ def stream_advanced_chat(
     # max_tokens=max_tokens
     # stream=True
     # extra_body={"provider": {"data_collection": "deny"}}
-
     response = client.chat.completions.create(
         model=(model or DEFAULT_MODEL).strip(),
         messages=build_multimodal_messages(history, message),  # type: ignore
@@ -62,7 +61,6 @@ def stream_advanced_chat(
         delta = chunk.choices[0].delta.content
         if delta:
             # TODO 2: add delta to answer and yield the growing answer.
-
             answer += delta
             yield answer
 
@@ -70,18 +68,14 @@ def stream_advanced_chat(
 def build_demo() -> gr.ChatInterface:
     """Create the advanced Gradio app with configurable controls."""
     api_key_input = gr.Textbox(label="OpenRouter API Key", type="password")
-
     # TODO 3: create a gr.Dropdown for model selection using MODEL_CHOICES.
-
     model_input = gr.Dropdown(
         label="Model",
         choices=MODEL_CHOICES,
         value=DEFAULT_MODEL,
         allow_custom_value=True,
     )
-
     # TODO 4: create a gr.Slider for temperature from 0 to 1.5.
-
     temperature_input = gr.Slider(
         label="Temperature",
         minimum=0,
@@ -89,9 +83,7 @@ def build_demo() -> gr.ChatInterface:
         step=0.1,
         value=0.7,
     )
-
     # TODO 5: create a gr.Slider for max tokens from 64 to 2048.
-
     max_tokens_input = gr.Slider(
         label="Max Tokens",
         minimum=64,
@@ -99,9 +91,7 @@ def build_demo() -> gr.ChatInterface:
         step=64,
         value=512,
     )
-
     # TODO 6: return gr.ChatInterface with multimodal=True and all four inputs.
-
     return gr.ChatInterface(
         fn=stream_advanced_chat,
         multimodal=True,
